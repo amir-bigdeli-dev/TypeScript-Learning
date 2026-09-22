@@ -1,118 +1,85 @@
-// in operator narrowing
+// Using type predicates
 
-type Fish = { swim: () => void };
-type Bird = { fly: () => void };
-type Human = { swim?: () => void; fly?: () => void };
+type Cat = { meow: () => void };
+type Dog = { bark: () => void };
 
-function move(animal: Fish | Bird | Human) : void {
-    if ("swim" in animal) {
-        animal.swim?.()
-    } else {
-        animal.fly?.()
-    }
+function isCatWrong(pet : Cat | Dog) : pet is Cat {
+  return "meow" in pet
 }
 
-move({ swim: () => undefined });
-move({ fly: () => console.log("flying") });
-move({ swim: () => console.log("swimming"), fly: () => console.log("flying") });
-move({});
+const PetList : (Cat | Dog)[] = [
+    {meow : () => console.log("meow")},
+    { bark : () => console.log("Barrrk")}
+]
 
+const Cats  = PetList.filter(isCatWrong)
 
-// type Success = {data : string[]};
-// type Failure = {error : string , code: number};
+console.log(Cats)
 
-const  handleResponse = (res : Success | Failure) => {
-    if( "data" in res){
-        return res.data.join(" , ")
-    }
-    return res.error
+//چالش ۲: Predicate روی unknown
+
+function isNumber(input : unknown) : input is number {
+    return typeof input === "number"
+}
+function isString ( input : unknown) : input is string {
+    return typeof input === "string"
 }
 
-// console.log(handleResponse({data : ['a','b','c']}))
+const inputs : unknown[] = [1, "two", 3, null, 4, undefined,"three"]
 
-//Discriminated Union
-
-interface Success  {
-    status : "success",
-    data : string[]
+function numSum (input : unknown []) : number {
+    const nums = input.filter(isNumber)
+    return nums.reduce((a,b) => a + b , 0)
 }
 
-interface Failure {
-    status: "Failure",
-    error : string,
-    code : number
+console.log(numSum(inputs))
+console.log(inputs.filter(isString).join(" ,"))
+
+// چالش ۳: Predicate ترکیبی برای Object کامل
+
+type Point = { x: number; y: number };
+
+function isPoint(value: unknown): value is Point {
+    return (
+        typeof value === "object" &&
+        value !== null &&
+        "x" in value &&
+        "y" in value &&
+        typeof value.x === "number" &&
+        typeof value.y === "number"
+    );
 }
 
-const DiscriminatedHandleResponse = (res : Success | Failure)  => {
-    if(res.status === "success"){
-        return res.data.join(", ")
-    }
-    return `${res.error} : ${ res.code }`
-}
-
-
-console.log(DiscriminatedHandleResponse({status : 'success' , data : ['a','b','c']}))
-console.log(DiscriminatedHandleResponse({ status : "Failure" , code : 403 , error : "Page Not Found !!"}))
-
-
-
-type Circle = { radius: number };
-type Rectangle = { width: number; height: number };
-type Square = { side: number };
-type Triangle = { base : number , height : number}
-
-const area = (shape : Circle | Rectangle | Square | Triangle): number => {
-   if( "radius" in shape) {
-       return (Math.PI * (shape.radius)**2)
-   }else if(  "width" in shape){
-       return shape.width * shape.height
-   }else if("side" in shape){
-       return shape.side**2
-   }else{
-       const _exhaustive : never = shape
-       return _exhaustive
-   }
-}
-
-
-console.log(area({radius:5}))
-console.log(area({side : 20}))
-
-//Invalid Input
-
-const GetUserName = (input : unknown) : string => {
-    if(
-        typeof input === "object" &&
-        input !== null &&
-        "name" in input &&
-        typeof input.name === "string"
-    ){
-        return input.name
-    }else{
-        return "Anonymouse"
-    }
-}
-
-console.log(GetUserName("amir"))
-console.log(GetUserName({name : "Amirhossein"}))
-
-//Type Guard
-
-type User = { name: string };
-type Admin = { name: string; permissions: string[] };
-
-function isAdmin(user : User | Admin) : user is Admin { 
-    return "permissions" in user
-}
-
-const people: (User | Admin)[] = [
-    { name: "Ali" },
-    { name: "Sara", permissions: ["read", "write"] },
-    { name: "Reza" },
+const candidates: unknown[] = [
+    { x: 1, y: 2 },
+    { x: 1 },
+    { x: "1", y: 2 },
+    null,
+    { x: 1, y: 2, z: 3 },
 ];
 
-const admins = people.filter(isAdmin);
+const points = candidates.filter(isPoint);
+console.log(points);
 
-const weird = { name: "Ali", permissions: undefined };
-console.log("permissions" in weird);              // true
-console.log(weird.permissions !== undefined);      // false
+
+function isStringArray(value: unknown): value is string[] {
+    return Array.isArray(value) && value.every((a) => typeof a === "string");
+}
+
+const mixed: unknown = ['a', 'b', '1'];
+
+if (isStringArray(mixed)) {
+    console.log(mixed[0].toUpperCase());
+}
+
+
+function isNotNullish<T>(value: T): value is NonNullable<T> {
+    return value !== null && value !== undefined;
+}
+
+const numbers: (number | null)[] = [1, null, 2, null, 3];
+const cleanNumbers = numbers.filter(isNotNullish);   // number[]
+
+
+
+console.log(cleanNumbers)
