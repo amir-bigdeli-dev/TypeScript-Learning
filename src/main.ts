@@ -38,3 +38,15 @@ const user : User = {name : "Ali",age : 18}
 console.log(getProperty(user,['name','age']))
 console.log(getProperty(user,['age']))
 // console.log(getProperty(user,'email'))
+
+//Challenge 4
+
+function createContainer<T = string>(value?: T): { value: T | undefined }{
+    return {value}
+}
+
+const c1 = createContainer()
+const c2 = createContainer(5)
+const c3 = createContainer(true)
+const c4 = createContainer<boolean>()
+console.log(c1)
