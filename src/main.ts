@@ -1,52 +1,37 @@
 // Generic functions
 
-function wrapInArray<T>(value: T): T[] | undefined{
-    return [value]
+
+//Challenge 5
+
+function findById<T extends { id: number }>(items: T[], id: number): T | undefined{
+    return items.find(item => item.id === id)
 }
 
-function getLastElement<T>(arr : T[]) : T | undefined {
-  return arr.at(-1)
+interface Product {
+    name: string,
+    id : number,
+    price : number
 }
-
-console.log(wrapInArray(['a','b','c']))
-console.log(wrapInArray('5'))
-console.log(getLastElement(['a','b','c']))
-
-
-function pair <A,B> (first : A , second : B) : [A,B] {
-    return [first,second]
-}
-
-function swap <A,B> (t:[A,B]) : [B,A]{
-    return [t[1],t[0]]
-}
-
-const p = pair(true,[1,2,3,4])
-console.log(p)
-console.log(swap(p))
-
-function getProperty<T, K extends keyof T>(obj: T, keys: K[]): T[K][]{
-    return keys.map(key => obj[key])
-}
-
-interface User  {
+interface User {
     name : string,
-    age: number
-}
-const user : User = {name : "Ali",age : 18}
-
-console.log(getProperty(user,['name','age']))
-console.log(getProperty(user,['age']))
-// console.log(getProperty(user,'email'))
-
-//Challenge 4
-
-function createContainer<T = string>(value?: T): { value: T | undefined }{
-    return {value}
+    id : number
 }
 
-const c1 = createContainer()
-const c2 = createContainer(5)
-const c3 = createContainer(true)
-const c4 = createContainer<boolean>()
-console.log(c1)
+
+const products: Product[] = [
+    { id: 1, name: "Laptop", price: 1200 },
+    { id: 2, name: "Mouse", price: 25 },
+];
+
+const users: User[] = [
+    { id: 1, name: "ali" },
+    { id: 2, name: "sara" },
+];
+
+const product = findById(products,2)
+const user = findById(users,2)
+
+if(product) console.log(product.name,product.price)
+if(user) console.log(user.name)
+
+
