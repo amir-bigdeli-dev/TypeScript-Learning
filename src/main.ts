@@ -25,8 +25,8 @@ const p = pair(true,[1,2,3,4])
 console.log(p)
 console.log(swap(p))
 
-function getProperty<T, K extends keyof T>(obj: T, key: K): T[K]{
-    return obj[key]
+function getProperty<T, K extends keyof T>(obj: T, keys: K[]): T[K][]{
+    return keys.map(key => obj[key])
 }
 
 interface User  {
@@ -35,6 +35,6 @@ interface User  {
 }
 const user : User = {name : "Ali",age : 18}
 
-console.log(getProperty(user,'name'))
-console.log(getProperty(user,'age'))
-console.log(getProperty(user,'email'))
+console.log(getProperty(user,['name','age']))
+console.log(getProperty(user,['age']))
+// console.log(getProperty(user,'email'))
