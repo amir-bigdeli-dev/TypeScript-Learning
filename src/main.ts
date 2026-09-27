@@ -1,46 +1,26 @@
-// Call Signatures
+// Generic functions
 
-type DescribableFunction = {
-    description : string,
-    (Arg : number) : boolean ;
+function wrapInArray<T>(value: T): T[] | undefined{
+    return [value]
 }
 
-function doSomething(fn : DescribableFunction) {
-    console.log(`${fn.description} => ${fn(6)}`)
+function getLastElement<T>(arr : T[]) : T | undefined {
+  return arr.at(-1)
 }
 
-function myFunction(arg : number)  {
-    return arg > 3;
+console.log(wrapInArray(['a','b','c']))
+console.log(wrapInArray('5'))
+console.log(getLastElement(['a','b','c']))
+
+
+function pair <A,B> (first : A , second : B) : [A,B] {
+    return [first,second]
 }
 
-myFunction.description = "Function answer : "
-
-doSomething(myFunction)
-
-//چالش ۲: Overloaded Call Signature
-
-type Converter = {
-    description : "Converting : ",
-    (value : number) : string,
-    (vale : string) : number
+function swap <A,B> (t:[A,B]) : [B,A]{
+    return [t[1],t[0]]
 }
 
-function convert (value : number):string
-function convert (value : string) : number
-function convert ( value : string | number) : number | string {
-    if(typeof value === "string"){
-        return Number(value)
-    }else{
-        return value.toString()
-    }
-}
-
-console.log(convert('10'))
-
-function greet(name: string): string
-function greet(first: string, last: string): string
-function greet(first: string, last?: string): string {
-    return last ? `Hello, ${first} ${last}!` : `Hello, ${first}!`
-}
-
-console.log(greet('amir'))
+const p = pair(true,[1,2,3,4])
+console.log(p)
+console.log(swap(p))
