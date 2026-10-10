@@ -1,13 +1,12 @@
 // Functions Overload
-function makeDate ( timeStamp : number) : Date
-function makeDate (m : number , d : number , y : number) : Date
-function makeDate (mOrTimestamp : number , d?:number , y? : number){
-    if (d !== undefined && y !== undefined) {
-        return new Date(y, mOrTimestamp, d);
-    } else {
-        return new Date(mOrTimestamp);
-    }
+
+//Exercise 1
+function createElementFunc (tag : string) : {tag : string}
+function createElementFunc (tag : string , text : string) : {tag : string , text : string}
+function createElementFunc ( tag : string , text ? : string) : {tag : string} | {tag : string , text : string} {
+    if(text === undefined) return {'tag':tag}
+    return {'tag':tag,'text' : text}
 }
-const d1 = makeDate(12345678);
-const d2 = makeDate(5, 5, 5);
-const d3 = makeDate(1, 3);
+
+const d = createElementFunc('div')
+const d2 = createElementFunc('div','hello')
