@@ -1,13 +1,16 @@
 // Functions Overload
 
-//Exercise 3
+//Exercise 4
 
-function format(value: unknown): unknown;
-function format(value: string): string;
-function format(value: unknown): string {
-    if (typeof value === "string") return value.toUpperCase();
-    return String(value);
+function log(message : string) : void
+function log(message : string , level : "info" | "warning" | "error") : void
+function log(message : string , level ?: string) : void {
+    if  ( level !== undefined ) {
+        console.log(`[${level} : ${message}]`)
+    }else {
+        console.log(message)
+    }
 }
 
-const a = format("hello");
-const b = format(42);
+// log("hello")
+log("amir","error")
