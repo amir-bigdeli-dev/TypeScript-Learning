@@ -1,14 +1,13 @@
 // Functions Overload
 
-//Exercise 2
+//Exercise 3
 
-function parse(value : number) : string
-function parse (value : string) : number
-function parse(value : number | string) : string | number {
-    if (typeof value === "string") {
-        return Number(value);
-    }
-    return value.toString();
+function format(value: string): string;
+function format(value: unknown): unknown;
+function format(value: unknown): string {
+    if (typeof value === "string") return value.toUpperCase();
+    return String(value);
 }
 
-let x = parse('2')
+const a = format("hello");
+const b = format(42);
