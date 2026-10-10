@@ -1,9 +1,13 @@
-// Constraints
-function longest<T>(a: T, b: T): T {
-    return a.length >= b.length ? a : b;
+// Functions Overload
+function makeDate ( timeStamp : number) : Date
+function makeDate (m : number , d : number , y : number) : Date
+function makeDate (mOrTimestamp : number , d?:number , y? : number){
+    if (d !== undefined && y !== undefined) {
+        return new Date(y, mOrTimestamp, d);
+    } else {
+        return new Date(mOrTimestamp);
+    }
 }
-
-longest([1, 2], [1, 2, 3]);
-longest("abc", "de");
-longest({ length: 10 }, { length: 3 });
-longest(10, 20);  
+const d1 = makeDate(12345678);
+const d2 = makeDate(5, 5, 5);
+const d3 = makeDate(1, 3);
